@@ -131,7 +131,11 @@ Defaults are shown here
 
 ## Launch files
 
-### test/tracking_pid_local_planner/test_tracking_pid_local_planner_cpp.launch
+### test/tracking_pid_local_planner/test_full_coverage_path_planner.launch
+
+```bash
+roslaunch tracking_pid test_full_coverage_path_planner.launch 
+```
 
 Runs the Tracking PID local planner in combination with the full_coverage_path_planner global planner.
 Mobile_robot_simulator is used to integrate cmd_vel output into TF and odometry.
@@ -149,13 +153,21 @@ Arguments:
 
 Start planning and tracking by giving a 2D nav goal.
 
-### test/test_path_interpolator_topic.launch
+### test/interpolator/test_path_interpolator_topic.launch
+
+```bash
+roslaunch tracking_pid test_path_interpolator_topic.launch
+```
 
 Shows the the use of the path_interpolator. A path is published on /path and a target is moved along the path at a given velocity.
 Takes no arguments.
 If all is well, an orange sphere should move a back-and-forth path covering a square.
 
-### test/test_tracking_pid.test
+### 3.test/tracking_pid/test_tracking_pid.test
+
+```bash
+roslaunch tracking_pid test_tracking_pid.launch
+```
 
 This launch-file extends test_path_interpolator_topic.launch with the actual tracking_pid controller, wrapped in a node.
 
