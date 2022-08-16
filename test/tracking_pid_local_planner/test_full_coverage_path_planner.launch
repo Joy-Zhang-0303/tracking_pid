@@ -21,11 +21,11 @@
         <param name="global_costmap/robot_radius" value="$(arg robot_radius)"/>
         <remap from="odom" to="/odom"/>
         <remap from="scan" to="/scan"/>
-
         <remap from="/move_base_flex/SpiralSTC/plan" to="/move_base/SpiralSTC/plan"/>
         <remap from="/move_base_flex/tracking_pid/interpolator" to="/move_base/TrackingPidLocalPlanner/interpolator"/>
     </node>
 
+    
     <!-- Move Base backwards compatibility -->
     <node pkg="mbf_costmap_nav" type="move_base_legacy_relay.py" name="move_base" >
         <param name="base_global_planner" value="SpiralSTC" />

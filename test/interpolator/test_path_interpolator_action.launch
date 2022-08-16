@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <launch>
-    <!-- Startup PID controller -->
+    <!-- Startup interpolator -->
     <node name="interpolator" pkg="tracking_pid" type="path_interpolator" output="screen">
         <param name="target_x_vel" value="0.5"/>
         <param name="loop" value="-1"/>
     </node>
 
+    <!--  pkg="tf" type="static_transform_publisher" args="x y z yaw pitch roll frame_id child_frame_id period_in_ms -->
     <node pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 earth map 100" name="map_tfpub"/>
 
     <!--<node name="publish_path" pkg="rostopic" type="rostopic" args="pub &#45;&#45;latch /path nav_msgs/Path &#45;&#45;file=$(find tracking_pid)/trajectories/coverage_map.yaml"/>-->
