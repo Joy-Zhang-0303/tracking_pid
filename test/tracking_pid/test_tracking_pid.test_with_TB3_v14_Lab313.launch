@@ -31,8 +31,11 @@
     <!-- v1.2 added -->
 
     <!-- static tf transformation-->
-    <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 map path_frame 100" name="path_frame_tfpub"/>
-    <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 map odom 100"       name="odom_frame_tfpub"/>
+    <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 map path_frame 100" 		name="path_frame_tfpub"/>
+    <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 map odom 100"       		name="odom_frame_tfpub"/>
+
+    <!-- base_footprint to base_link for real robot-->
+    <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 base_footprint base_link 100" 	name="baselink_frame_tfpub"/>
 
     <!-- Rviz -->
     <node if="$(arg rviz)" name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find tracking_pid)/test/tracking_pid/controller_tb3.rviz" />
@@ -45,9 +48,9 @@
       <param name="odometry_topic" value="/odom"/>
     </node -->
     <!-- Start fake turtlebot3 robot -->
-    <include file="$(find turtlebot3_fake)/launch/turtlebot3_fake.launch">
+    <!--include file="$(find turtlebot3_fake)/launch/turtlebot3_fake.launch">
       <arg name="model" value="$(arg model)" />
-    </include>
+    </include -->
 
     <!-- test script -->
     <test test-name="rostest_tracking_pid_node" pkg="tracking_pid" type="test_tracking_pid_system.py" />
