@@ -37,7 +37,7 @@
     <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 map odom 100"       		name="odom_frame_tfpub"/>
 
     <!-- base_footprint to base_link for real robot-->
-    <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 base_footprint base_link 100" 	name="baselink_frame_tfpub"/> <!-- RealTB3 added -->
+   <!-- RealTB3 added -->
 
     <!-- Rviz -->
     <node if="$(arg rviz)" name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find tracking_pid)/test/tracking_pid/controller_tb3.rviz" />
