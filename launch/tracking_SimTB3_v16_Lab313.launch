@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Use turtlebot3 as the robot to control-->
+<!-- v1.1 fix tf issue-->
+<!-- v1.2 apply Track trajectory with base_link-->
+<!-- v1.3 tune PID controller-->
+<!-- v1.4 tune turning behavior Interpolator-->
+<launch>
+    <!-- Environmrnt Parameters -->
+    <arg name="rviz" default="true"/>
+    <arg name="model" default="waffle_pi" doc="model type [burger, waffle, waffle_pi]"/> 
+
+    <!-- Interpolator -->
+    <node name="interpolator" pkg="tracking_pid" type="path_interpolator">
+        <param name="target_x_vel" value="0.26"/>
+        <param name="target_x_acc" value="0.5"/> <!--100 -->
+        <param name="target_yaw_vel" value="1.82"/>  <!-- v1.4 added -->
+        <param name="target_yaw_acc" value="0.1"/>  <!-- v1.4 added -->
+    </node>
+
+    <!-- PID controller -->
+    <node name="controller" pkg="tracking_pid" type="controller" output="screen">
+      <remap from="move_base/cmd_vel" to="/cmd_vel"/>
+      <remap from="local_trajectory" to="trajectory"/>
+      <param name="controller_debug_enabled" value="True"/>
+      <param name="l" value="0.5"/>
+      <param name="track_base_link" value="True"/>  <!-- v1.2 added -->
+      <param name="Kp_long" value="5.0"/>           <!-- v1.3 added -->
+    </node>
+
+    <!-- Test path -->
+    <node name="publish_path" pkg="rostopic" type="rostopic" args="pub --latch /path nav_msgs/Path --file=$(find tracking_pid)/trajectories/TKB2022_lab313Room.yaml"/> 
+    
+    <!-- static tf transformation-->>
+    <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 map path_frame 100" name="path_frame_tfpub"/>
+    <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 map odom 100"       name="odom_frame_tfpub"/>
+
+    <!-- Rviz -->
+    <node if="$(arg rviz)" name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find tracking_pid)/test/tracking_pid/controller_tb3.rviz" />
+
+    <!-- Simulator -->
+    <!--node pkg="mobile_robot_simulator" type="mobile_robot_simulator_node" name="fake_odometry" output="screen">
+      <param name="publish_map_transform" value="true"/>
+      <param name="publish_rate" value="10.0"/>
+      <param name="velocity_topic" value="/move_base/cmd_vel"/>
+      <param name="odometry_topic" value="/odom"/>
+    </node -->
+    <!-- Start fake turtlebot3 robot -->
+    <include file="$(find turtlebot3_fake)/launch/turtlebot3_fake.launch">
+      <arg name="model" value="$(arg model)" />
+    </include>
+
+    <!-- test script -->
+    <test test-name="rostest_tracking_pid_node" pkg="tracking_pid" type="test_tracking_pid_system.py" />
+
+</launch>
