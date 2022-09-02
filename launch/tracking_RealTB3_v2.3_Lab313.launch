@@ -6,6 +6,7 @@
 <!-- v1.4 tune turning behavior Interpolator-->
 <!-- RealTB3: Fix tf issue for real TB3 -->
 <!-- v2.2 add robot_state_publisher-->
+<!-- v2.3 Change interpolator target x_vel and yaw_vel -->
 <launch>
     <!-- Environmrnt Parameters -->
     <arg name="rviz" default="true"/>
