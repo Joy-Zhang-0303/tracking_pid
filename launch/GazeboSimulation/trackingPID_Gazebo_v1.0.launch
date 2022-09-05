@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Use turtlebot3 as the robot to control-->
+<!-- v1.1 fix tf issue-->
+<!-- v1.2 apply Track trajectory with base_link-->
+<!-- v1.3 tune PID controller-->
+<!-- v1.4 tune turning behavior Interpolator-->
+<!-- RealTB3: Fix tf issue for real TB3 -->
+<!-- v2.2 add robot_state_publisher-->
+<!-- v2.3 Change interpolator target x_vel and yaw_vel -->
+<launch>
+    <!-- Environmrnt Parameters -->
+    <arg name="rviz" default="true"/>
+    <arg name="model" default="waffle_pi" doc="model type [burger, waffle, waffle_pi]"/> 
+
+	<!-- 1. Start Gazebo Environment -->
+	  <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_empty_world.launch">
+	    <arg name="model" value="$(arg model)" />
+	  </include>
+
+	<!-- 2. Start robot_state_publisher-->
+	   <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+	      <arg name="model" value="$(arg model)" />
+	    </include>
+
+    <!-- Interpolator -->
+    <node name="interpolator" pkg="tracking_pid" type="path_interpolator">
+        <param name="target_x_vel" value="0.26"/> 
+        <param name="target_x_acc" value="0.5"/> 
+        <param name="target_yaw_vel" value="1.82"/>  
+        <param name="target_yaw_acc" value="0.1"/>
+	<param name="loop" value="-1"/>  
+    </node>
+
+    <!-- PID controller -->
+    <node name="controller" pkg="tracking_pid" type="controller" output="screen">
+      <remap from="move_base/cmd_vel" to="/cmd_vel"/>
+      <remap from="local_trajectory" to="trajectory"/>
+      <param name="controller_debug_enabled" value="True"/>
+      <param name="l" value="0.2"/>
+      <param name="track_base_link" value="True"/>  
+      <param name="Kp_long" value="5.0"/>
+      <param name="Ki_long" value="1.0"/>
+      <param name="Kd_long" value="1.0"/>                                            
+      <param name="Kp_ang" value="1.0"/>
+      <param name="Ki_ang" value="1.0"/>
+      <param name="Kd_ang" value="1.3"/>                                            
+
+    </node>
+
+
+    <!-- Publish the path topic -->
+    <node name="publish_path" pkg="rostopic" type="rostopic" args="pub --latch /path nav_msgs/Path --file=$(find tracking_pid)/trajectories/Lab313Zag.yaml"/> 
+    
+    <!-- static tf transformation-->
+    <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 map path_frame 100" 		name="path_frame_tfpub"/>
+    <node pkg="tf" type="static_transform_publisher" args=" 0 0 0 0 0 0 map odom 100"       		name="odom_frame_tfpub"/>
+
+    <!-- Rviz -->
+    <node if="$(arg rviz)" name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find tracking_pid)/test/tracking_pid/controller_tb3.rviz" />
+
+    <!-- test script -->
+    <test test-name="rostest_tracking_pid_node" pkg="tracking_pid" type="test_tracking_pid_system.py" />
+
+</launch>
