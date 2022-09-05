@@ -7,6 +7,7 @@
 <!-- RealTB3: Fix tf issue for real TB3 -->
 <!-- v2.2 add robot_state_publisher-->
 <!-- v2.3 Change interpolator target x_vel and yaw_vel -->
+<!-- v3.0 Tuning Interpolator speed parameters -->
 
 <launch>
     <!-- Environmrnt Parameters -->
@@ -15,9 +16,9 @@
 
     <!-- Interpolator -->
     <node name="interpolator" pkg="tracking_pid" type="path_interpolator">
-        <param name="target_x_vel" value="0.2"/> <!-- v2.3 Real TB: 0.26 m/s -->
-        <param name="target_x_acc" value="0.2"/> <!--100 -->
-        <param name="target_yaw_vel" value="1.5"/>  <!-- v2.3 Real TB: 1.82 rad/s -->
+        <param name="target_x_vel" value="0.2"/> <!-- v3.0 Real TB: 0.26 m/s -->
+        <param name="target_x_acc" value="0.2"/> <!-- v3.0 -->
+        <param name="target_yaw_vel" value="1.5"/>  <!-- v3.0 Real TB: 1.82 rad/s -->
         <param name="target_yaw_acc" value="0.1"/>  <!-- v1.4 added -->
 	<param name="loop" value="-1"/>  
     </node>
@@ -32,7 +33,6 @@
       <param name="Kp_long" value="5.0"/>           <!-- v1.3 added -->
     </node>
 
-    <!-- Test path -->
     <!-- Need to start the path generated program from MATLAB -->
     <node name="publish_path" pkg="rostopic" type="rostopic" args="pub --latch /path nav_msgs/Path --file=$(find tracking_pid)/trajectories/Lab313Zag_1.yaml"/> 
     
