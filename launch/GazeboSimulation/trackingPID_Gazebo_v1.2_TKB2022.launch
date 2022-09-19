@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Use turtlebot3 as the robot to control-->
 <!-- v1.1 use gazebo to simulate TKB2022 and initialize robot position-->
+<!-- v1.2 change trajectory file to TKB2022_RevE.yaml : update the waypoints at corner -->
 <launch>
     <!-- Environmrnt Parameters -->
     <arg name="rviz" default="true"/>
     <arg name="model" default="waffle_pi" doc="model type [burger, waffle, waffle_pi]"/> 
     <arg name="map_file" default="$(find tracking_pid)/maps/TKB2022Map.yaml"/>
-    <arg name="trajectory_file" default="$(find tracking_pid)/trajectories/TKB2022.yaml"/>
+    <arg name="trajectory_file" default="$(find tracking_pid)/trajectories/TKB2022_RevE.yaml"/>
     <!-- 1. Start Gazebo Environment -->
     <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_empty_world.launch">
     	<arg name="model" value="$(arg model)" />
